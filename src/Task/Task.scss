@@ -1,0 +1,22 @@
+.task-box {
+    padding: 0 14px;
+    margin-top: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3234;
+    width: 100%;
+
+    &__title {
+        font-size: 18px;
+        margin-right: 20px;
+    }
+
+    &__btn { 
+        padding: 10px 6px;
+        height: max-content;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+}
