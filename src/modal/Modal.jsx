@@ -56,7 +56,7 @@ const Modal = () => {
                         type="text"
                         className="modal__box-input"
                     />{' '}
-                    <button className="modal__btn">add</button>
+                    <button className="modal__btn">edit</button>
                 </div>
                 {error && (
                     <p className="modal__error">The task must be at least 2 characters long</p>

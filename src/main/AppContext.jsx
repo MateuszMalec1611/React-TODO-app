@@ -8,16 +8,15 @@ export const EDIT = 'EDIT';
 export const REMOVE = 'REMOVE';
 
 const tasksList = [
-    { id: 0, name: 'Wywiesić pranie', important: false, done: false },
-    { id: 1, name: 'Zrobić obiad', important: false, done: false },
-    { id: 2, name: 'Pójść na spacer ', important: false, done: false },
+    { id: 0, name: 'Wywiesić pranie', done: false },
+    { id: 1, name: 'Zrobić obiad', done: false },
+    { id: 2, name: 'Pójść na spacer ', done: false },
 ];
 
 const toDoListReducer = (state, action) => {
-    
     switch (action.type) {
         case ADD:
-            return;
+            return [...state, action.newTask];
         case DONE:
             return state.map(task => {
                 if (task.id === action.id) {
