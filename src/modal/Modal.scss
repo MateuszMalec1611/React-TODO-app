@@ -8,7 +8,7 @@
     bottom: 10%;
     background-color: #343434;
     text-align: center;
-    transition: transform .4s;
+    transition: transform 0.4s;
 
     &--active {
         transform: translate(-50%, 0);
@@ -28,14 +28,15 @@
         &-input {
             margin-right: 8px;
             padding: 5px;
-            background-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.2);
             border: 1px solid black;
             border-radius: 6px;
+            color: white;
             transition: background-color 0.3s;
 
             &:focus {
                 outline: none;
-                background-color: rgba(255, 255, 255, 0.6);
+                background-color: rgba(255, 255, 255, 0.3);
             }
         }
     }
@@ -58,6 +59,12 @@
             border-color: white;
             color: white;
         }
+    }
+
+    &__error {
+        margin-top: 10px;
+        padding: 0 15px;
+        color: tomato;
     }
 }
 

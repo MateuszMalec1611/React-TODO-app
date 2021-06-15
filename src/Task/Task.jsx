@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { ACTION_TYPE } from '../main/AppContext';
+import { AppContext } from '../main/AppContext';
 
 import './Task.scss';
 
 const Task = props => {
-    const { id, name, important, done, onClickHandler } = props;
-    const [DONE, EDIT, REMOVE] = ACTION_TYPE;
-
+    const { toggleModalVisibility, getTaskId } = useContext(AppContext);
+    const { id, name, done, onClickHandler } = props;
+    const [DONE, REMOVE] = ACTION_TYPE;
     const handleDelete = () => onClickHandler({ id, type: REMOVE });
     const handleDone = () => onClickHandler({ id, type: DONE });
+    const handleEdit = () => {
+        getTaskId(id);
+        toggleModalVisibility();
+    };
 
     const taskToDo = (
         <li className="task">
@@ -18,7 +23,9 @@ const Task = props => {
                 <button onClick={handleDone} className="task__btn-box-btn">
                     done
                 </button>
-                <button className="task__btn-box-btn">edit</button>
+                <button onClick={handleEdit} className="task__btn-box-btn">
+                    edit
+                </button>
                 <button onClick={handleDelete} className="task__btn-box-btn">
                     x
                 </button>
@@ -28,7 +35,7 @@ const Task = props => {
 
     const taskDone = (
         <li className="task">
-            <p className="task__title">{name}</p>
+            <p className="task__title task__title--done">{name}</p>
             <div className="task__btn-box">
                 <button
                     onClick={handleDelete}
