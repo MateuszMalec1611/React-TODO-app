@@ -1,5 +1,7 @@
 import React from 'react';
 
+import AppProvider from './AppContext';
+import Modal from '../modal/Modal';
 import Tasks from '../tasks/Tasks';
 
 import './App.scss';
@@ -7,7 +9,12 @@ import './App.scss';
 const App = () => {
     return (
         <div className="toDo">
-            <Tasks />
+            <div className="toDo__container">
+                <AppProvider>
+                    <Tasks />
+                    <Modal />
+                </AppProvider>
+            </div>
         </div>
     );
 };
