@@ -7,7 +7,6 @@
     max-width: 840px;
     bottom: 10%;
     background-color: #343434;
-    text-align: center;
     transition: transform 0.4s;
 
     &--active {
@@ -28,36 +27,16 @@
         &-input {
             margin-right: 8px;
             padding: 5px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 1px solid black;
-            border-radius: 6px;
             color: white;
-            transition: background-color 0.3s;
-
-            &:focus {
-                outline: none;
-                background-color: rgba(255, 255, 255, 0.3);
-            }
         }
     }
 
     &__btn {
         padding: 8px 10px;
-        text-transform: uppercase;
-        background-color: #ffffff;
         border: 1px solid black;
         border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.2s, border-color 0.2s;
-
         &--cancel {
             margin-top: 20px;
-        }
-
-        &:hover {
-            background-color: transparent;
-            border-color: white;
-            color: white;
         }
     }
 
