@@ -1,0 +1,10 @@
+.toDo {
+    display: flex;
+    justify-content: center;
+
+    &__container {
+        margin: 0 20px;
+        width: 100%;
+        max-width: 1200px;
+    }
+}
