@@ -2,7 +2,10 @@ import { createContext, useReducer, useState } from 'react';
 
 export const AppContext = createContext();
 
-export const ACTION_TYPE = ['DONE', 'EDIT', 'REMOVE'];
+export const ADD = 'ADD';
+export const DONE = 'DONE';
+export const EDIT = 'EDIT';
+export const REMOVE = 'REMOVE';
 
 const tasksList = [
     { id: 0, name: 'Wywiesić pranie', important: false, done: false },
@@ -11,9 +14,10 @@ const tasksList = [
 ];
 
 const toDoListReducer = (state, action) => {
-    const [DONE, EDIT, REMOVE] = ACTION_TYPE;
-
+    
     switch (action.type) {
+        case ADD:
+            return;
         case DONE:
             return state.map(task => {
                 if (task.id === action.id) {
@@ -23,9 +27,8 @@ const toDoListReducer = (state, action) => {
             });
 
         case EDIT:
-            return;
+            return action.editedTasks;
         case REMOVE:
-            console.log(state);
             return state.filter(task => task.id !== action.id);
 
         default:
@@ -35,7 +38,7 @@ const toDoListReducer = (state, action) => {
 
 const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(toDoListReducer, tasksList);
-    
+
     const [isModalActive, setIsModalActive] = useState(false);
     const [taskId, setTaskId] = useState(null);
 

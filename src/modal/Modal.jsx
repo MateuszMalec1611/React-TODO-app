@@ -1,23 +1,21 @@
 import React, { useContext, useState } from 'react';
 
-import { ACTION_TYPE } from '../main/AppContext';
-import { AppContext } from '../main/AppContext';
+import { AppContext, EDIT } from '../main/AppContext';
 
 import './Modal.scss';
 
 const Modal = () => {
     const { dispatch, isModalActive, state, taskId, toggleModalVisibility } =
         useContext(AppContext);
-    const [EDIT] = ACTION_TYPE;
     const [inputValue, setInputValue] = useState('');
     const [error, setError] = useState(false);
-    //TEST
+
     if (!isModalActive && inputValue !== '') setInputValue('');
 
-    // if (isModalActive && inputValue === '') {
-    //     const text = taskToEdit.map(task => task.name);
-    //     setInputValue(text);
-    // }
+    if (isModalActive && inputValue === '') {
+        const text = state.filter(task => task.id === taskId);
+        setInputValue(text[0].name);
+    }
 
     const handleInput = event => {
         setInputValue(event.target.value);

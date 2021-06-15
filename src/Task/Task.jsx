@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
 
-import { ACTION_TYPE } from '../main/AppContext';
-import { AppContext } from '../main/AppContext';
+import { AppContext, REMOVE, DONE } from '../main/AppContext';
 
 import './Task.scss';
 
 const Task = props => {
     const { toggleModalVisibility, getTaskId } = useContext(AppContext);
     const { id, name, done, onClickHandler } = props;
-    const [DONE, REMOVE] = ACTION_TYPE;
+
     const handleDelete = () => onClickHandler({ id, type: REMOVE });
     const handleDone = () => onClickHandler({ id, type: DONE });
     const handleEdit = () => {
