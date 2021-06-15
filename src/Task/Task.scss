@@ -8,7 +8,7 @@
     width: 100%;
 
     &__title {
-        font-size: 18px;
+        font-size: 16px;
         margin-right: 20px;
         text-align: left;
     }
@@ -18,10 +18,11 @@
         flex-wrap: nowrap;
 
         &-btn {
-            padding: 10px 6px;
+            padding: 10px 3px;
             background-color: white;
             border: 1px solid white;
             font-weight: bold;
+            font-size: 11px;
             text-transform: uppercase;
             cursor: pointer;
             transition: color 0.2s, background-color 0.3s;
@@ -32,6 +33,7 @@
             }
 
             &:nth-child(1) {
+                padding-left: 12px;
                 border-radius: 10px 0 0 10px;
             }
             &:nth-child(3) {
@@ -47,6 +49,18 @@
                 padding: 10px 22px;
                 border-radius: 10px;
             }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .task {
+        &__title {
+            font-size: 20px;
+        }
+        &__btn-box-btn {
+            padding: 10px 8px;
+            font-size: 14px;
         }
     }
 }

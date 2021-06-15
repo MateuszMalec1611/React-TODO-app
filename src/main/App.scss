@@ -1,6 +1,9 @@
 .toDo {
+    position: relative;
     display: flex;
     justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
 
     &__container {
         margin: 0 20px;
