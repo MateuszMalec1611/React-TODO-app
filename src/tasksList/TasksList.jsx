@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { AppContext } from '../main/AppContext';
 import Task from '../task/Task';
 
-import './Tasks.scss';
+import './TasksList.scss';
 
 const Tasks = () => {
     const { state, dispatch } = useContext(AppContext);
