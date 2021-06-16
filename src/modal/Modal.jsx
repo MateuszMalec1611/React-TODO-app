@@ -13,7 +13,8 @@ const Modal = () => {
     useEffect(() => {
         if (isModalActive) {
             const task = state.find(task => task.id === taskId);
-            setInputValue(task.name);
+            if(task) setInputValue(task.name);
+            return;
         }
     }, [isModalActive, state, taskId]);
 
@@ -26,7 +27,7 @@ const Modal = () => {
         if (inputValue.length < 2) {
             setError(true);
             return;
-        }
+        } 
 
         const editedTasks = state.map(task => {
             if (task.id === taskId) {
