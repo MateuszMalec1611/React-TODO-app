@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { AppContext, EDIT } from '../main/AppContext';
 
@@ -10,12 +10,12 @@ const Modal = () => {
     const [inputValue, setInputValue] = useState('');
     const [error, setError] = useState(false);
 
-    if (!isModalActive && inputValue !== '') setInputValue('');
-
-    if (isModalActive && inputValue === '') {
-        const text = state.filter(task => task.id === taskId);
-        setInputValue(text[0].name);
-    }
+    useEffect(() => {
+        if (isModalActive) {
+            const task = state.find(task => task.id === taskId);
+            setInputValue(task.name);
+        }
+    }, [isModalActive, state, taskId]);
 
     const handleInput = event => {
         setInputValue(event.target.value);
@@ -42,7 +42,7 @@ const Modal = () => {
     const handleCancel = () => {
         toggleModalVisibility();
         setInputValue('');
-        setError('');
+        setError(false);
     };
 
     return (
