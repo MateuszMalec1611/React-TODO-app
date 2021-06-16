@@ -13,37 +13,31 @@ const Modal = () => {
     useEffect(() => {
         if (isModalActive) {
             const task = state.find(task => task.id === taskId);
-            if(task) setInputValue(task.name);
+            if (task) {
+                setInputValue(task.name);
+                setError(false);
+            }
             return;
         }
-    }, [isModalActive, state, taskId]);
+    }, [isModalActive, state, setError, taskId]);
 
-    const handleInput = event => {
-        setInputValue(event.target.value);
-    };
-
+    const handleInput = event => setInputValue(event.target.value);
+   
     const handleSubmit = event => {
         event.preventDefault();
         if (inputValue.length < 2) {
             setError(true);
             return;
-        } 
+        }
 
         const editedTasks = state.map(task => {
-            if (task.id === taskId) {
-                task.name = inputValue;
-            }
+            if (task.id === taskId) task.name = inputValue;
+
             return task;
         });
 
         dispatch({ editedTasks, type: EDIT });
-        handleCancel();
-    };
-
-    const handleCancel = () => {
         toggleModalVisibility();
-        setInputValue('');
-        setError(false);
     };
 
     return (
@@ -63,7 +57,7 @@ const Modal = () => {
                     <p className="modal__error">The task must be at least 2 characters long</p>
                 )}
             </form>
-            <button onClick={handleCancel} className="modal__btn modal__btn--cancel">
+            <button onClick={() => toggleModalVisibility()} className="modal__btn modal__btn--cancel">
                 cancel
             </button>
         </div>
