@@ -34,7 +34,9 @@ const TaskEdition = ({ switchComponent, id }) => {
                 value={inputValue}
                 type="text"
             />
-            <button className="taskEdition__btn">edit</button>
+            <button onClick={switchComponent} className="taskEdition__btn">
+                edit
+            </button>
         </form>
     );
 };
