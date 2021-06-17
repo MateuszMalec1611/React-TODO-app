@@ -22,6 +22,7 @@ code {
 input {
     width: clamp(120px, 100%, 260px);
     background-color: rgba(255, 255, 255, 0.2);
+    color: white;
     border: 1px solid black;
     border-radius: 6px;
     transition: background-color 0.3s;

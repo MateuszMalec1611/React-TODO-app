@@ -26,7 +26,7 @@ const TaskEdition = ({ switchComponent, id }) => {
     };
 
     return (
-        <form className="taskEdition" onSubmit={handleEdition}>
+        <form className="taskEdition">
             <input
                 ref={inputEl}
                 className="taskEdition__input"
@@ -34,7 +34,9 @@ const TaskEdition = ({ switchComponent, id }) => {
                 value={inputValue}
                 type="text"
             />
-            <button className="taskEdition__btn">edit</button>
+            <button onClick={handleEdition} className="taskEdition__btn">
+                edit
+            </button>
         </form>
     );
 };

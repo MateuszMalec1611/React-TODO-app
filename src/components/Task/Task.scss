@@ -11,6 +11,7 @@
         font-size: 16px;
         margin-right: 20px;
         text-align: left;
+        overflow-wrap: anywhere;
 
         &--done {
             text-decoration: line-through;
