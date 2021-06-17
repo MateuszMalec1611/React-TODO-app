@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from 'react';
+import { createContext, useReducer } from 'react';
 
 export const TodoAppContext = createContext();
 
@@ -16,7 +16,11 @@ const tasksList = [
 const toDoListReducer = (state, action) => {
     switch (action.type) {
         case ADD:
-            return [...state, action.newTask];
+            if (action.newTask) {
+                return [...state, action.newTask];
+            } else {
+                return;
+            }
         case DONE:
             return state.map(task => {
                 if (task.id === action.id) {
@@ -38,21 +42,11 @@ const toDoListReducer = (state, action) => {
 const TodoAppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(toDoListReducer, tasksList);
 
-    const [isModalActive, setIsModalActive] = useState(false);
-    const [taskId, setTaskId] = useState(null);
-
-    const toggleModalVisibility = () => setIsModalActive(!isModalActive);
-    const getTaskId = id => setTaskId(id);
-
     return (
         <TodoAppContext.Provider
             value={{
                 dispatch,
-                getTaskId,
-                isModalActive,
                 state,
-                taskId,
-                toggleModalVisibility,
             }}>
             {children}
         </TodoAppContext.Provider>

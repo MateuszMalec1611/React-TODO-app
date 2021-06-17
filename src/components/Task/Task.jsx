@@ -1,19 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 
-import { TodoAppContext, REMOVE, DONE } from '../../Store/TodoListContext';
+import { REMOVE, DONE } from '../../Store/TodoListContext';
 
 import './Task.scss';
 
 const Task = props => {
-    const { toggleModalVisibility, getTaskId } = useContext(TodoAppContext);
+    // const { } = useContext(TodoAppContext);
+
     const { id, name, done, onClickHandler } = props;
 
     const handleDelete = () => onClickHandler({ id, type: REMOVE });
     const handleDone = () => onClickHandler({ id, type: DONE });
-    const handleEdit = () => {
-        getTaskId(id);
-        toggleModalVisibility();
-    };
 
     const taskToDo = (
         <li className="task">
@@ -22,9 +19,7 @@ const Task = props => {
                 <button onClick={handleDone} className="task__btn-box-btn">
                     done
                 </button>
-                <button onClick={handleEdit} className="task__btn-box-btn">
-                    edit
-                </button>
+                <button className="task__btn-box-btn">edit</button>
                 <button onClick={handleDelete} className="task__btn-box-btn">
                     x
                 </button>
