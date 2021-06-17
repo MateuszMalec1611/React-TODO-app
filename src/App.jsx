@@ -1,9 +1,7 @@
 import React from 'react';
-
 import TodoAppProvider from './Store/TodoListContext';
 import AddTask from './components/AddTask/AddTask';
 import Tasks from './components/TasksList/TasksList';
-
 import './App.scss';
 
 const App = () => {

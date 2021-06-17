@@ -1,7 +1,5 @@
 import React, { useState, useContext } from 'react';
-
 import { TodoAppContext, ADD } from '../../Store/TodoListContext';
-
 import './AddTask.scss';
 
 let ID = 3;

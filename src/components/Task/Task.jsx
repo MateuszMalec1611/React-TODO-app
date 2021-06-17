@@ -1,29 +1,40 @@
 import React, { useState } from 'react';
-
 import { REMOVE, DONE } from '../../Store/TodoListContext';
-
+import TaskEdition from '../TaskEdition/TaskEdition';
 import './Task.scss';
 
 const Task = props => {
-    // const { } = useContext(TodoAppContext);
-
+    const [isEditing, setIsEditing] = useState(false);
     const { id, name, done, onClickHandler } = props;
 
     const handleDelete = () => onClickHandler({ id, type: REMOVE });
     const handleDone = () => onClickHandler({ id, type: DONE });
+    const handleEditionComponent = () => setIsEditing(!isEditing);
 
-    const taskToDo = (
-        <li className="task">
+    const taskToDoElements = (
+        <>
             <p className="task__title">{name}</p>
             <div className="task__btn-box">
                 <button onClick={handleDone} className="task__btn-box-btn">
                     done
                 </button>
-                <button className="task__btn-box-btn">edit</button>
+                <button onClick={handleEditionComponent} className="task__btn-box-btn">
+                    edit
+                </button>
                 <button onClick={handleDelete} className="task__btn-box-btn">
                     x
                 </button>
             </div>
+        </>
+    );
+
+    const taskToDo = (
+        <li className="task">
+            {isEditing ? (
+                <TaskEdition id={id} switchComponent={handleEditionComponent} />
+            ) : (
+                taskToDoElements
+            )}
         </li>
     );
 
