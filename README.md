@@ -1,3 +1,28 @@
+### UWAGI:
+
+# Foldery i nazwy plików
+
+- Na komponenty stwórz folder components
+- Wszystkie foldery nazywaj z duej litery (tak jak komponenty w nich)
+- Z foldaru main wyciągnij plik `App.jsx` i `App.scss` i przenieś do folderu `src`
+- Na pliki z Contextem stwórz osobny folder, np. Contexts lub Store i tam przenieś plik z Contextem
+- Zmień nazwę pliku z contextem na np. `TodoListContext`, bo tam trzymasz akcje strikte dla TodoListy
+- Nie dodawaj spacji pomiędzy importami w plikach. Najlepiej dodaj do projektu prettiera, wtedy sam po savie będzie Ci formatował pliki.
+
+# Style
+
+- Jest to mała apka, więc nie będzie problemu z nazwami klas, ale jak projekt miałby się powiększać to warto ju teraz pomyśleć o zastosowaniu scss modules lub styled components
+
+# AppContext.jsx
+
+- w `case ADD` zrób sprawdzenie czy istnieje `action.newTask`, eby nie dodawać `undefined` do tablicy
+- w linii 45 zle nazwałeś funkcje, bo ty nie dostajesz z niej `id` jak wskazuje nazwa, tylko ustawiasz `id`. Zmień na np. `setEditedTaskId` czy coś w tym stylu co bardziej odda jej zadanie.
+- Ja bym zmienił logike tak ze zamiast trzymania w kotekscie samego `id` wrzucć tam juz cały obiekt taska, tak zeby pozniej w modalu juz nie szukac w state za kazdym razem tego taska po `id`, tylko od razu masz go dostepnego i nie musisz kilka razy mapować.
+
+### Ogólnie bardzo fajnie zrobione! Duzy plus za uzycie Context API :)
+
+Tylko tak jak juz Ci ostatnio wspominalem od strony UI/UX zmien sposob edytowania taksow, tak zeby mozna je bylo edytowac bezposrednio na liscie.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
