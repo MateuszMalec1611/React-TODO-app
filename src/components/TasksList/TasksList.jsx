@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 
-import { AppContext } from '../main/AppContext';
-import Task from '../task/Task';
+import { TodoAppContext } from '../../Store/TodoListContext';
+import Task from '../Task/Task';
 
 import './TasksList.scss';
 
-const Tasks = () => {
-    const { state, dispatch } = useContext(AppContext);
+const TasksList = () => {
+    const { state, dispatch } = useContext(TodoAppContext);
     
     //FILTER TASKS
     const tasksToDo = state.filter(task => !task.done);
@@ -51,4 +51,4 @@ const Tasks = () => {
     );
 };
 
-export default Tasks;
+export default TasksList;

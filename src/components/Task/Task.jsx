@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 
-import { AppContext, REMOVE, DONE } from '../main/AppContext';
+import { TodoAppContext, REMOVE, DONE } from '../../Store/TodoListContext';
 
 import './Task.scss';
 
 const Task = props => {
-    const { toggleModalVisibility, getTaskId } = useContext(AppContext);
+    const { toggleModalVisibility, getTaskId } = useContext(TodoAppContext);
     const { id, name, done, onClickHandler } = props;
 
     const handleDelete = () => onClickHandler({ id, type: REMOVE });

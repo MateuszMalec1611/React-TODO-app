@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 
-import { AppContext, ADD } from '../main/AppContext';
+import { TodoAppContext, ADD } from '../../Store/TodoListContext';
 
 import './AddTask.scss';
 
 let ID = 3;
 
 const AddTask = () => {
-    const { dispatch } = useContext(AppContext);
+    const { dispatch } = useContext(TodoAppContext);
 
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);

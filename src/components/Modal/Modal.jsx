@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { AppContext, EDIT } from '../main/AppContext';
+import { TodoAppContext, EDIT } from '../../Store/TodoListContext';
 
 import './Modal.scss';
 
 const Modal = () => {
     const { dispatch, isModalActive, state, taskId, toggleModalVisibility } =
-        useContext(AppContext);
+        useContext(TodoAppContext);
     const [inputValue, setInputValue] = useState('');
     const [error, setError] = useState(false);
 

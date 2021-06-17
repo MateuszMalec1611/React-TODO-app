@@ -1,6 +1,6 @@
 import { createContext, useReducer, useState } from 'react';
 
-export const AppContext = createContext();
+export const TodoAppContext = createContext();
 
 export const ADD = 'ADD';
 export const DONE = 'DONE';
@@ -35,7 +35,7 @@ const toDoListReducer = (state, action) => {
     }
 };
 
-const AppProvider = ({ children }) => {
+const TodoAppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(toDoListReducer, tasksList);
 
     const [isModalActive, setIsModalActive] = useState(false);
@@ -45,7 +45,7 @@ const AppProvider = ({ children }) => {
     const getTaskId = id => setTaskId(id);
 
     return (
-        <AppContext.Provider
+        <TodoAppContext.Provider
             value={{
                 dispatch,
                 getTaskId,
@@ -55,8 +55,8 @@ const AppProvider = ({ children }) => {
                 toggleModalVisibility,
             }}>
             {children}
-        </AppContext.Provider>
+        </TodoAppContext.Provider>
     );
 };
 
-export default AppProvider;
+export default TodoAppProvider;
