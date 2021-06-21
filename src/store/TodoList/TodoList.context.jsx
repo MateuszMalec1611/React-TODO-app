@@ -1,13 +1,7 @@
 import { createContext, useEffect, useReducer, useState } from 'react';
-import firebase from '../utils/firebase';
+import firebase from '../../utils/firebase';
 
 export const TodoAppContext = createContext();
-
-export const GET_DATA = 'DATA';
-export const ADD = 'ADD';
-export const DONE = 'DONE';
-export const EDIT = 'EDIT';
-export const REMOVE = 'REMOVE';
 
 const toDoListReducer = (state, action) => {
     switch (action.type) {
