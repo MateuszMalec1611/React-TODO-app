@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { REMOVE, DONE } from '../../Store/TodoListContext';
+import { REMOVE, DONE } from '../../store/TodoList/TodoList.actions';
 import TaskEdition from '../TaskEdition/TaskEdition';
 import './Task.scss';
 

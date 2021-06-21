@@ -1,15 +1,16 @@
 import React, { useContext } from 'react';
-import { TodoAppContext } from '../../Store/TodoListContext';
+import { TodoListContext } from '../../store/TodoList/TodoList.context';
 import Task from '../Task/Task';
 import Loader from '../Loader/Loader';
 import './TasksList.scss';
 
 const TasksList = () => {
-    const { dispatch, loading, state } = useContext(TodoAppContext);
+    const { dispatch, todoListState: { todoList, isLoading } } = useContext(TodoListContext);
+
 
     //FILTER TASKS
-    const tasksToDo = state.filter(task => !task.done);
-    const tasksDone = state.filter(task => task.done);
+    const tasksToDo = todoList.filter(task => !task.done);
+    const tasksDone = todoList.filter(task => task.done);
 
     //CREATE TASKS COMPONENTS
     const allTasksToDo = tasksToDo.map(task => (
@@ -34,7 +35,7 @@ const TasksList = () => {
         ) : (
             <ul className="tasks-box__ul">{allTasksDone}</ul>
         );
-        
+
     //COMPONENT TO RENDER
     const tasksFullList = (
         <div className="tasks-box">
@@ -49,7 +50,7 @@ const TasksList = () => {
             {showTasksDone}
         </div>
     );
-    return <>{loading ? <Loader /> : tasksFullList}</>;
+    return <>{isLoading ? <Loader /> : tasksFullList}</>;
 };
 
 export default TasksList;

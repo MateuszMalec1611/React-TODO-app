@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { EDIT, TodoAppContext } from '../../Store/TodoListContext';
+import { TodoListContext } from '../../store/TodoList/TodoList.context';
+import { EDIT } from '../../store/TodoList/TodoList.actions';
 import './TaskEdition.scss';
 
 const TaskEdition = ({ switchComponent, id }) => {
-    const { dispatch, state } = useContext(TodoAppContext);
+    const { dispatch, state } = useContext(TodoListContext);
     const task = state.find(task => task.id === id);
 
     const [inputValue, setInputValue] = useState(task.name);

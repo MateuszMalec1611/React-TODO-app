@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { TodoAppContext, ADD } from '../../Store/TodoListContext';
+import { TodoListContext } from '../../store/TodoList/TodoList.context';
+import { ADD } from '../../store/TodoList/TodoList.actions';
 import './AddTask.scss';
 
 let ID;
 
 const AddTask = () => {
-    const { dispatch } = useContext(TodoAppContext);
+    const { dispatch } = useContext(TodoListContext);
 
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);

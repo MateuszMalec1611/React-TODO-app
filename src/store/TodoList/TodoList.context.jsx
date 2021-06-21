@@ -1,35 +1,49 @@
-import { createContext, useEffect, useReducer, useState } from 'react';
-import firebase from '../../utils/firebase';
+import { createContext, useReducer, useEffect } from 'react';
+import { fetchAllTasks } from './TodoList.services';
+import { ADD, DONE, EDIT, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
 
-export const TodoAppContext = createContext();
+export const TodoListContext = createContext();
 
-const toDoListReducer = (state, action) => {
-    switch (action.type) {
-        case GET_DATA:
-            return action.todoList;
+const initialState = {
+    todoList: [],
+    isLoading: false,
+    error: undefined
+}
 
-        case ADD:
-            firebase.database().ref(`Todo/${action.newTask.id}`).set(action.newTask);
-            return [...state, action.newTask];
+const toDoListReducer = (state, { type, payload }) => {
+    switch (type) {
+        case SET_DATA:
+            return {
+                ...state,
+                todoList: payload ?? [],
+                isLoading: false
+            };
+        case LOADING:
+            return {
+                ...state,
+                isLoading: payload
+            };
 
-        case DONE:
-            const tasks = state.map(task => {
-                if (task.id === action.id) {
-                    task.done = true;
-                }
-                return task;
-            });
-            firebase.database().ref(`Todo/`).set(tasks);
-            return tasks;
+        // case ADD:
+        //     return [...state, data.newTask];
 
-        case EDIT:
-            firebase.database().ref(`Todo/`).set(action.editedTasks);
-            return action.editedTasks;
+        // case DONE:
+        //     const tasks = state.map(task => {
+        //         if (task.id === data.id) {
+        //             task.done = true;
+        //         }
+        //         return task;
+        //     });
 
-        case REMOVE:
-            const newTasksList = state.filter(task => task.id !== action.id);
-            firebase.database().ref(`Todo/`).set(newTasksList);
-            return newTasksList;
+        //     return tasks;
+
+        // case EDIT:
+        //     return data.editedTasks;
+
+        // case REMOVE:
+        //     const newTasksList = state.filter(task => task.id !== data.id);
+
+        //     return newTasksList;
 
         default:
             throw new Error('Something went wrong');
@@ -37,36 +51,33 @@ const toDoListReducer = (state, action) => {
 };
 
 const TodoAppProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(toDoListReducer, []);
-    const [loading, setLoading] = useState(true);
+    const [todoListState, dispatch] = useReducer(toDoListReducer, initialState);
+
+    const setTasks = async () => {
+        dispatch({ type: LOADING, payload: true });
+        try {
+            const tasks = await fetchAllTasks();
+
+            dispatch({ type: SET_DATA, payload: tasks })
+        } catch (err) {
+            dispatch({ type: LOADING, payload: false });
+            console.error(err);
+        }
+
+    }
 
     useEffect(() => {
-        const todoRef = firebase.database().ref('Todo/');
-        todoRef.on('value', tasks => {
-            let todoList = [];
-            tasks.forEach(task => {
-                todoList.push(task.val());
-            });
-
-            const fetchData = async () => {
-                await fetch(todoList)
-                    .then(() => dispatch({ todoList, type: GET_DATA }))
-                    .catch(err => console.log(err));
-                setLoading(false);
-            };
-            fetchData();
-        });
-    }, []);
+        setTasks();
+    }, [])
 
     return (
-        <TodoAppContext.Provider
+        <TodoListContext.Provider
             value={{
                 dispatch,
-                loading,
-                state,
+                todoListState,
             }}>
             {children}
-        </TodoAppContext.Provider>
+        </TodoListContext.Provider>
     );
 };
 

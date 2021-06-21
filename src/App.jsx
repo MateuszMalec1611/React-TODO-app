@@ -1,5 +1,5 @@
 import React from 'react';
-import TodoAppProvider from './Store/TodoListContext';
+import TodoListProvider from './store/TodoList/TodoList.context';
 import AddTask from './components/AddTask/AddTask';
 import TaskList from './components/TasksList/TasksList';
 import './App.scss';
@@ -9,10 +9,10 @@ const App = () => {
         <div className="toDo">
             <div className="toDo__container">
                 <h1 className="toDo__header">todo app</h1>
-                <TodoAppProvider>
+                <TodoListProvider>
                     <AddTask />
                     <TaskList />
-                </TodoAppProvider>
+                </TodoListProvider>
             </div>
         </div>
     );
