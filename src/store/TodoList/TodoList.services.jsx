@@ -9,3 +9,19 @@ export const fetchAllTasks = async () => {
     return console.log(error);
   }
 };
+
+export const addTask = async (task) => {
+  try {
+    await api().post(`/Todo.json`, task);
+  } catch (error) {
+    return console.log(error);
+  }
+};
+
+export const editTask = async (task) => {
+  try {
+    await api().put(`/Todo/${task.id}.json`, task);
+  } catch (error) {
+    return console.log(error);
+  }
+};

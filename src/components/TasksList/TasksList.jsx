@@ -7,45 +7,45 @@ import './TasksList.scss';
 const TasksList = () => {
     const { dispatch, todoListState: { todoList, isLoading } } = useContext(TodoListContext);
 
-
     //FILTER TASKS
     const tasksToDo = todoList.filter(task => !task.done);
     const tasksDone = todoList.filter(task => task.done);
 
     //CREATE TASKS COMPONENTS
-    const allTasksToDo = tasksToDo.map(task => (
-        <Task key={task.id} {...task} onClickHandler={dispatch} />
+    const renderTasksToDo = tasksToDo.map(task => (
+        <Task key={task.id} task={task} key={task.id} />
     ));
 
-    const allTasksDone = tasksDone.map(task => (
-        <Task key={task.id} {...task} onClickHandler={dispatch} />
+    const renderTasksDone = tasksDone.map(task => (
+        <Task key={task.id} task={task} key={task.id} />
     ));
+
 
     //INSOLATE COMPONENTS INTO DONE AND TO DO
     const showTasksToDo =
-        allTasksToDo.length === 0 ? (
+        !tasksToDo.length ? (
             <p className="tasks-box__info">No tasks on the list</p>
         ) : (
-            <ul className="tasks-box__ul">{allTasksToDo}</ul>
+            <ul className="tasks-box__ul">{renderTasksToDo}</ul>
         );
 
     const showTasksDone =
-        allTasksDone.length === 0 ? (
+        !tasksDone.length ? (
             <p className="tasks-box__info">No tasks completed</p>
         ) : (
-            <ul className="tasks-box__ul">{allTasksDone}</ul>
+            <ul className="tasks-box__ul">{renderTasksDone}</ul>
         );
 
     //COMPONENT TO RENDER
     const tasksFullList = (
         <div className="tasks-box">
             <h2 className="tasks-box__header">
-                Tasks to do ({allTasksToDo.length === false ? '0' : allTasksToDo.length})
+                Tasks to do ({tasksToDo.length})
             </h2>
             {showTasksToDo}
 
             <h3 className="tasks-box__header--done">
-                Done tasks ({allTasksDone.length === false ? '0' : allTasksDone.length})
+                Done tasks ({tasksDone.length})
             </h3>
             {showTasksDone}
         </div>

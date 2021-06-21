@@ -1,19 +1,65 @@
-import React, { useState } from 'react';
-import { REMOVE, DONE } from '../../store/TodoList/TodoList.actions';
+import React, { useState, useContext } from 'react';
+import { REMOVE, DONE, LOADING, EDIT } from '../../store/TodoList/TodoList.actions';
+import { TodoListContext } from '../../store/TodoList/TodoList.context';
+import { editTask } from '../../store/TodoList/TodoList.services';
 import TaskEdition from '../TaskEdition/TaskEdition';
 import './Task.scss';
 
-const Task = props => {
-    const [isEditing, setIsEditing] = useState(false);
-    const { id, name, done, onClickHandler } = props;
+const Task = ({ task, task: { id, name, done } }) => {
+    const { dispatch, todoListState: { todoList, isLoading } } = useContext(TodoListContext);
+    const [editingTask, setEditingTask] = useState({
+        isEditing: false,
+        name: ''
+    });
 
-    const handleDelete = () => onClickHandler({ id, type: REMOVE });
-    const handleDone = () => onClickHandler({ id, type: DONE });
-    const handleEditionComponent = () => setIsEditing(!isEditing);
+    const handleDelete = async () => {
+        dispatch({ type: REMOVE, payload: id });
+    }
+    const handleDone = async () => {
+        dispatch({ type: LOADING, payload: true });
+
+        const doneTask = {
+            ...task,
+            done: true
+        }
+
+        try {
+            await editTask(doneTask);
+            dispatch({ type: DONE, payload: doneTask });
+        } catch (err) {
+            dispatch({ type: LOADING, payload: false });
+            console.error(err);
+        }
+    }
+    const handleEditionComponent = async () => {
+        if (editingTask.isEditing) {
+            const newTask = {
+                ...task,
+                name: editingTask.name
+            }
+
+            try {
+                await editTask(newTask);
+                dispatch({ type: EDIT, payload: newTask })
+            } catch (err) {
+                dispatch({ type: LOADING, payload: false });
+                console.error(err);
+            }
+            setEditingTask({ ...editingTask, isEditing: false });
+            return;
+        }
+        setEditingTask({ isEditing: true, name });
+    };
+
+    const handleNameChange = ({ target: { value } }) => setEditingTask({ ...editingTask, name: value });
 
     const taskToDoElements = (
         <>
-            <p className="task__title">{name}</p>
+            {
+                editingTask.isEditing
+                    ? <input type="text" value={editingTask.name} onChange={handleNameChange} />
+                    : <p className="task__title" onClick={handleEditionComponent}>{name}</p>
+            }
             <div className="task__btn-box">
                 <button onClick={handleDone} className="task__btn-box-btn">
                     done
@@ -30,11 +76,7 @@ const Task = props => {
 
     const taskToDo = (
         <li className="task">
-            {isEditing ? (
-                <TaskEdition id={id} switchComponent={handleEditionComponent} />
-            ) : (
-                taskToDoElements
-            )}
+            {taskToDoElements}
         </li>
     );
 

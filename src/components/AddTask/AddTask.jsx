@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
+import { addTask } from '../../store/TodoList/TodoList.services';
 import { ADD } from '../../store/TodoList/TodoList.actions';
 import './AddTask.scss';
 
@@ -11,23 +12,26 @@ const AddTask = () => {
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);
 
-    const handleAddTaskValue = event => setTaskValue(event.target.value);
-    const handleaddTaskSubmit = event => {
+    const handleAddTaskValue = ({ target: { value } }) => setTaskValue(value);
+    const handleaddTaskSubmit = async event => {
         event.preventDefault();
         if (taskValue.length < 2) {
             setTaskError(true);
             return;
         }
 
-        ID = Date.now();
-
         const newTask = {
-            id: ID,
             name: taskValue,
             done: false,
         };
 
-        dispatch({ newTask, type: ADD });
+        try {
+            await addTask(newTask);
+        } catch (err) {
+            console.error(err);
+        }
+
+        dispatch({ type: ADD, payload: newTask });
 
         setTaskValue('');
         setTaskError(false);
