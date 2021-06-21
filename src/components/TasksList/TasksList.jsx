@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { TodoAppContext } from '../../Store/TodoListContext';
 import Task from '../Task/Task';
+import Loader from '../Loader/Loader';
 import './TasksList.scss';
 
 const TasksList = () => {
-    const { state, dispatch } = useContext(TodoAppContext);
-  
+    const { dispatch, loading, state } = useContext(TodoAppContext);
+
     //FILTER TASKS
     const tasksToDo = state.filter(task => !task.done);
     const tasksDone = state.filter(task => task.done);
@@ -19,7 +20,7 @@ const TasksList = () => {
         <Task key={task.id} {...task} onClickHandler={dispatch} />
     ));
 
-    //RENDER TASKS
+    //INSOLATE COMPONENTS INTO DONE AND TO DO
     const showTasksToDo =
         allTasksToDo.length === 0 ? (
             <p className="tasks-box__info">No tasks on the list</p>
@@ -33,8 +34,9 @@ const TasksList = () => {
         ) : (
             <ul className="tasks-box__ul">{allTasksDone}</ul>
         );
-
-    return (
+        
+    //COMPONENT TO RENDER
+    const tasksFullList = (
         <div className="tasks-box">
             <h2 className="tasks-box__header">
                 Tasks to do ({allTasksToDo.length === false ? '0' : allTasksToDo.length})
@@ -47,6 +49,7 @@ const TasksList = () => {
             {showTasksDone}
         </div>
     );
+    return <>{loading ? <Loader /> : tasksFullList}</>;
 };
 
 export default TasksList;

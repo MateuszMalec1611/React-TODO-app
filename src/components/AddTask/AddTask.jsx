@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { TodoAppContext, ADD } from '../../Store/TodoListContext';
 import './AddTask.scss';
 
-let ID = 0;
+let ID;
 
 const AddTask = () => {
     const { state, dispatch } = useContext(TodoAppContext);
@@ -18,7 +18,7 @@ const AddTask = () => {
             return;
         }
         
-        ID = state.length + 1;
+        ID = state.length;
         const newTask = {
             id: ID,
             name: taskValue,

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from 'react';
+import { createContext, useEffect, useReducer, useState } from 'react';
 import firebase from '../utils/firebase';
 
 export const TodoAppContext = createContext();
@@ -44,6 +44,7 @@ const toDoListReducer = (state, action) => {
 
 const TodoAppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(toDoListReducer, []);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const todoRef = firebase.database().ref('Todo/');
@@ -52,7 +53,14 @@ const TodoAppProvider = ({ children }) => {
             tasks.forEach(task => {
                 todoList.push(task.val());
             });
-            dispatch({ todoList, type: GET_DATA });
+
+            const fetchData = async () => {
+                await fetch(todoList)
+                    .then(() => dispatch({ todoList, type: GET_DATA }))
+                    .catch(err => console.log(err));
+                setLoading(false);
+            };
+            fetchData();
         });
     }, []);
 
@@ -60,6 +68,7 @@ const TodoAppProvider = ({ children }) => {
         <TodoAppContext.Provider
             value={{
                 dispatch,
+                loading,
                 state,
             }}>
             {children}
