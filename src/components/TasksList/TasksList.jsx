@@ -5,7 +5,7 @@ import './TasksList.scss';
 
 const TasksList = () => {
     const { state, dispatch } = useContext(TodoAppContext);
-    
+  
     //FILTER TASKS
     const tasksToDo = state.filter(task => !task.done);
     const tasksDone = state.filter(task => task.done);

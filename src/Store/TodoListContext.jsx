@@ -1,38 +1,41 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
+import firebase from '../utils/firebase';
 
 export const TodoAppContext = createContext();
 
+export const GET_DATA = 'DATA';
 export const ADD = 'ADD';
 export const DONE = 'DONE';
 export const EDIT = 'EDIT';
 export const REMOVE = 'REMOVE';
 
-const tasksList = [
-    { id: 0, name: 'Wywiesić pranie', done: false },
-    { id: 1, name: 'Zrobić obiad', done: false },
-    { id: 2, name: 'Pójść na spacer ', done: false },
-];
-
 const toDoListReducer = (state, action) => {
     switch (action.type) {
+        case GET_DATA:
+            return action.todoList;
+
         case ADD:
-            if (action.newTask) {
-                return [...state, action.newTask];
-            } else {
-                return;
-            }
+            firebase.database().ref(`Todo/${action.newTask.id}`).set(action.newTask);
+            return [...state, action.newTask];
+
         case DONE:
-            return state.map(task => {
+            const tasks = state.map(task => {
                 if (task.id === action.id) {
                     task.done = true;
                 }
                 return task;
             });
+            firebase.database().ref(`Todo/`).set(tasks);
+            return tasks;
 
         case EDIT:
+            firebase.database().ref(`Todo/`).set(action.editedTasks);
             return action.editedTasks;
+
         case REMOVE:
-            return state.filter(task => task.id !== action.id);
+            const newTasksList = state.filter(task => task.id !== action.id);
+            firebase.database().ref(`Todo/`).set(newTasksList);
+            return newTasksList;
 
         default:
             throw new Error('Something went wrong');
@@ -40,7 +43,18 @@ const toDoListReducer = (state, action) => {
 };
 
 const TodoAppProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(toDoListReducer, tasksList);
+    const [state, dispatch] = useReducer(toDoListReducer, []);
+
+    useEffect(() => {
+        const todoRef = firebase.database().ref('Todo/');
+        todoRef.on('value', tasks => {
+            let todoList = [];
+            tasks.forEach(task => {
+                todoList.push(task.val());
+            });
+            dispatch({ todoList, type: GET_DATA });
+        });
+    }, []);
 
     return (
         <TodoAppContext.Provider

@@ -2,10 +2,10 @@ import React, { useState, useContext } from 'react';
 import { TodoAppContext, ADD } from '../../Store/TodoListContext';
 import './AddTask.scss';
 
-let ID = 3;
+let ID = 0;
 
 const AddTask = () => {
-    const { dispatch } = useContext(TodoAppContext);
+    const { state, dispatch } = useContext(TodoAppContext);
 
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);
@@ -17,7 +17,8 @@ const AddTask = () => {
             setTaskError(true);
             return;
         }
-
+        
+        ID = state.length + 1;
         const newTask = {
             id: ID,
             name: taskValue,
@@ -26,7 +27,6 @@ const AddTask = () => {
 
         dispatch({ newTask, type: ADD });
 
-        ID++;
         setTaskValue('');
         setTaskError(false);
     };
