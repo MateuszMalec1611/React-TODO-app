@@ -5,7 +5,7 @@ import './AddTask.scss';
 let ID;
 
 const AddTask = () => {
-    const { state, dispatch } = useContext(TodoAppContext);
+    const { dispatch } = useContext(TodoAppContext);
 
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);
@@ -17,8 +17,9 @@ const AddTask = () => {
             setTaskError(true);
             return;
         }
-        
-        ID = state.length;
+
+        ID = Date.now();
+
         const newTask = {
             id: ID,
             name: taskValue,
