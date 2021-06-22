@@ -46,7 +46,7 @@ const toDoListReducer = (state, { type, payload }) => {
                 isLoading: false,
             };
         case REMOVE:
-            const newTasksList = state.todoList.filter(todo => todo.id !== payload);
+            const newTasksList = state.todoList.filter(todo => todo.id !== payload.id);
             return {
                 ...state,
                 todoList: newTasksList,

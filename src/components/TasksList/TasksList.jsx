@@ -5,19 +5,19 @@ import Loader from '../Loader/Loader';
 import './TasksList.scss';
 
 const TasksList = () => {
-    const { dispatch, todoListState: { todoList, isLoading } } = useContext(TodoListContext);
+    const { todoListState: { todoList, isLoading } } = useContext(TodoListContext);
 
     //FILTER TASKS
     const tasksToDo = todoList.filter(task => !task.done);
-    const tasksDone = todoList.filter(task => task.done);
+    const tasksDone = todoList.filter(task => task.done).reverse();
 
     //CREATE TASKS COMPONENTS
     const renderTasksToDo = tasksToDo.map(task => (
-        <Task key={task.id} task={task} key={task.id} />
+        <Task key={task.id} task={task} />
     ));
 
     const renderTasksDone = tasksDone.map(task => (
-        <Task key={task.id} task={task} key={task.id} />
+        <Task key={task.id} task={task} />
     ));
 
 

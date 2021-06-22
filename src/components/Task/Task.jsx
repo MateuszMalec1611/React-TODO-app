@@ -1,4 +1,5 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
+import { useClickOutside } from 'react-click-outside-hook'
 import { REMOVE, DONE, LOADING, EDIT } from '../../store/TodoList/TodoList.actions';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
 import { editTask, removeTask } from '../../store/TodoList/TodoList.services';
@@ -10,20 +11,23 @@ const Task = ({ task, task: { id, name, done } }) => {
         isEditing: false,
         name: ''
     });
+    const [taskRef, hasClickedOutside] = useClickOutside();
     const inputEl = useRef();
+
     // DELETE BTN
     const handleDelete = async () => {
         dispatch({type: LOADING, payload: true});
 
         try {
             await removeTask(task);
-            dispatch({ type: REMOVE, payload: {id} });
+            dispatch({ type: REMOVE, payload: { id } });
         }catch (err) {
             console.log(err);
             dispatch({type: LOADING, payload: false});
         }
 
     }
+
     // DONE BTN
     const handleDone = async value => {
         const doneTask = {
@@ -40,21 +44,28 @@ const Task = ({ task, task: { id, name, done } }) => {
             dispatch({type: LOADING, payload: false});
         }
     }
+
     // EDITION BTN
-    const handleEditionComponent = async () => {
+    const handleEditionComponent = useCallback(async () => {
         if (editingTask.isEditing) {
             inputEl.current.focus();
-            if (checkInputValue()) return;
+            // SIMPLE VALIDATION
+            if(editingTask.name.length < 2) return true;
+            if(editingTask.name === name) {
+                setEditingTask({isEditing: false});
+                return true;
+            }
             
             const newTask = {
                 ...task,
                 name: editingTask.name
             }
+            
             dispatch({type: LOADING, payload: true});
             
             try {
                 await editTask(newTask);
-                dispatch({ type: EDIT, payload: newTask })
+                dispatch({ type: EDIT, payload: newTask });
             } catch (err) {
                 console.error(err);
                 dispatch({type: LOADING, payload: false});
@@ -63,31 +74,28 @@ const Task = ({ task, task: { id, name, done } }) => {
             return;
         }
         setEditingTask({ isEditing: true, name });
-    };
+    }, [ dispatch, editingTask, name, task]);
 
     const handleNameChange = ({ target: { value } }) => setEditingTask({ ...editingTask, name: value });
 
-    const checkInputValue = () => {
-        if(editingTask.name.length < 2) return true;
-
-        if(editingTask.name === name) {
-            setEditingTask({isEditing: false});
-            return true;
-        }
-    }
+    //FOCUS ON EDITING INPUT
     useEffect(() => {
         if (editingTask.isEditing) inputEl.current.focus();
-    },[editingTask.isEditing])
+    },[editingTask.isEditing]);
 
+    //HANDLE CLICK OUTSIDE
+    useEffect(() => {
+        if(hasClickedOutside && editingTask.isEditing) handleEditionComponent();
+
+    }, [editingTask.isEditing, handleEditionComponent, hasClickedOutside]);
     
-
     // RENDER COMPONENTS
     const taskToDoElements = (
         <>
             {
                 editingTask.isEditing
-                    ? <input className="task__input" type="text" value={editingTask.name} onChange={handleNameChange} ref={inputEl}/>
-                    : <p className="task__title" onClick={handleEditionComponent}>{name}</p>
+                ? <input className="task__input" type="text" value={editingTask.name} onChange={handleNameChange} ref={inputEl}/>
+                : <p className="task__title" onClick={handleEditionComponent}>{name}</p>
             }
             <div className="task__btn-box">
                 <button onClick={editingTask.isEditing ? null : () => handleDone(true)} className="task__btn-box-btn">
@@ -102,13 +110,13 @@ const Task = ({ task, task: { id, name, done } }) => {
             </div>
         </>
     );
-
+    
     const taskToDo = (
-        <li className="task">
+        <li ref={taskRef} className="task">
             {taskToDoElements}
         </li>
     );
-
+    
     const taskDone = (
         <li className="task">
             <p className="task__title task__title--done">{name}</p>
@@ -126,8 +134,9 @@ const Task = ({ task, task: { id, name, done } }) => {
             </div>
         </li>
     );
-
+    
     return <>{!done ? taskToDo : taskDone}</>;
 };
+
 
 export default Task;
