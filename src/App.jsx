@@ -1,10 +1,7 @@
 import React from 'react';
-
-import AppProvider from './AppContext';
-import AddTask from '../addTask/AddTask';
-import Modal from '../modal/Modal';
-import Tasks from '../tasksList/TasksList';
-
+import TodoListProvider from './store/TodoList/TodoList.context';
+import AddTask from './components/AddTask/AddTask';
+import TaskList from './components/TasksList/TasksList';
 import './App.scss';
 
 const App = () => {
@@ -12,11 +9,10 @@ const App = () => {
         <div className="toDo">
             <div className="toDo__container">
                 <h1 className="toDo__header">todo app</h1>
-                <AppProvider>
+                <TodoListProvider>
                     <AddTask />
-                    <Tasks />
-                    <Modal />
-                </AppProvider>
+                    <TaskList />
+                </TodoListProvider>
             </div>
         </div>
     );
