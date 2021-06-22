@@ -25,3 +25,11 @@ export const editTask = async (task) => {
     return console.log(error);
   }
 };
+
+export const removeTask = async (task) => {
+  try {
+    await api().delete(`/Todo/${task.id}.json`);
+  } catch (error) {
+    return console.log(error);
+  }
+};

@@ -18,6 +18,12 @@
         }
     }
 
+    &__input {
+        margin-right: 20px;
+        padding: 7px 8px;
+        font-size: 16px;
+    }
+
     &__btn-box {
         display: flex;
         flex-wrap: nowrap;
@@ -31,6 +37,10 @@
             &:nth-child(1) {
                 padding-left: 12px;
                 border-radius: 10px 0 0 10px;
+
+                &:hover {
+                    background-color: #278e27;
+                }
             }
             &:nth-child(3) {
                 padding: 0 12px;
@@ -41,9 +51,17 @@
                 }
             }
 
-            &--done:nth-child(1) {
-                padding: 10px 22px;
-                border-radius: 10px;
+            &--done:nth-child(2) {
+                padding: 10px 12px;
+                border-radius: 0px 10px 10px 0px;
+            }
+
+            &--undo:nth-child(1) {
+                padding: 10px 8px;
+
+                &:hover {
+                    background-color: #5e5e09;
+                }
             }
         }
     }
@@ -54,6 +72,12 @@
         &__title {
             font-size: 20px;
         }
+
+        &__input {
+            padding: 6px 8px;
+            font-size: 20px;
+        }
+
         &__btn-box-btn {
             padding: 10px 8px;
             font-size: 14px;

@@ -1,13 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
 import { addTask } from '../../store/TodoList/TodoList.services';
-import { ADD } from '../../store/TodoList/TodoList.actions';
+import { ADD, LOADING } from '../../store/TodoList/TodoList.actions';
 import './AddTask.scss';
 
-let ID;
-
 const AddTask = () => {
-    const { dispatch } = useContext(TodoListContext);
+    const { dispatch, setTasks, todoListState: { isLoading } } = useContext(TodoListContext);
 
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);
@@ -19,31 +17,41 @@ const AddTask = () => {
             setTaskError(true);
             return;
         }
-
+        dispatch({ type: LOADING, payload: true });
+        
         const newTask = {
             name: taskValue,
             done: false,
+            id: null,
         };
-
+        
         try {
             await addTask(newTask);
         } catch (err) {
             console.error(err);
+            dispatch({ type: LOADING, payload: false });
         }
-
+        
         dispatch({ type: ADD, payload: newTask });
-
+        setTasks();
+        
         setTaskValue('');
         setTaskError(false);
     };
 
+    const preventEmptySubmit = event => {
+        event.preventDefault();
+        return;
+    }
+    
+
     return (
-        <form onSubmit={handleaddTaskSubmit} className="addTask">
+        <form onSubmit={isLoading ? preventEmptySubmit : handleaddTaskSubmit} className="addTask">
             <label className="addTask__label">
                 Add task
                 <input
                     onChange={handleAddTaskValue}
-                    value={taskValue}
+                    value={isLoading ? '' : taskValue}
                     className="addTask__input"
                     type="text"
                 />
