@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
 import { addTask } from '../../store/TodoList/TodoList.services';
-import { ADD, LOADING } from '../../store/TodoList/TodoList.actions';
+import { ADD, ERROR, LOADING } from '../../store/TodoList/TodoList.actions';
 import './AddTask.scss';
 
 const AddTask = () => {
@@ -27,13 +27,11 @@ const AddTask = () => {
         
         try {
             await addTask(newTask);
+            dispatch({ type: ADD, payload: newTask });
+            setTasks();
         } catch (err) {
-            console.error(err);
-            dispatch({ type: LOADING, payload: false });
+            dispatch({type: ERROR, payload: err});
         }
-        
-        dispatch({ type: ADD, payload: newTask });
-        setTasks();
         
         setTaskValue('');
         setTaskError(false);

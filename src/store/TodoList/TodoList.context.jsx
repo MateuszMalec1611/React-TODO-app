@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect } from 'react';
 import { fetchAllTasks } from './TodoList.services';
-import { ADD, DONE, EDIT, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
+import { ADD, DONE, EDIT, ERROR, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
 import { prepareData } from '../../utils/prepareData';
 
 export const TodoListContext = createContext();
@@ -57,6 +57,12 @@ const toDoListReducer = (state, { type, payload }) => {
                 ...state,
                 isLoading: payload,
             };
+        case ERROR:
+            alert(payload)
+            return {
+                ...state,
+                isLoading: false,
+            };
 
         default:
             console.error('Something went wrong');
@@ -73,8 +79,7 @@ const TodoAppProvider = ({ children }) => {
 
             dispatch({ type: SET_DATA, payload: prepareData(tasks) });
         } catch (err) {
-            dispatch({ type: LOADING, payload: false });
-            console.error(err);
+            dispatch({ type: ERROR, payload: err });
         }
     };
 

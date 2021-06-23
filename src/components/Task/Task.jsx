@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
 import { useClickOutside } from 'react-click-outside-hook'
-import { REMOVE, DONE, LOADING, EDIT } from '../../store/TodoList/TodoList.actions';
+import { DONE, EDIT, ERROR, LOADING, REMOVE } from '../../store/TodoList/TodoList.actions';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
 import { editTask, removeTask } from '../../store/TodoList/TodoList.services';
 import './Task.scss';
@@ -22,10 +22,8 @@ const Task = ({ task, task: { id, name, done } }) => {
             await removeTask(task);
             dispatch({ type: REMOVE, payload: { id } });
         }catch (err) {
-            console.log(err);
-            dispatch({type: LOADING, payload: false});
+            dispatch({type: ERROR, payload: err});
         }
-
     }
 
     // DONE BTN
@@ -38,10 +36,9 @@ const Task = ({ task, task: { id, name, done } }) => {
         
         try {
             await editTask(doneTask);
-            dispatch({ type: DONE, payload: {id, value} });
+            dispatch({type: DONE, payload: { id, value }});
         } catch (err) {
-            console.error(err);
-            dispatch({type: LOADING, payload: false});
+            dispatch({type: ERROR, payload: err});
         }
     }
 
@@ -67,8 +64,7 @@ const Task = ({ task, task: { id, name, done } }) => {
                 await editTask(newTask);
                 dispatch({ type: EDIT, payload: newTask });
             } catch (err) {
-                console.error(err);
-                dispatch({type: LOADING, payload: false});
+                dispatch({type: ERROR, payload: err});
             }
             setEditingTask({ ...editingTask, isEditing: false });
             return;

@@ -1,35 +1,18 @@
 import api from '../../api';
 
 export const fetchAllTasks = async () => {
-  try {
-    const { data } = await api().get('/Todo.json');
-
-    return data;
-  } catch (error) {
-    return console.log(error);
-  }
+        const { data } = await api().get('/Todo.json');
+        return data;
 };
 
-export const addTask = async (task) => {
-  try {
+export const addTask = async task => {
     await api().post(`/Todo.json`, task);
-  } catch (error) {
-    return console.log(error);
-  }
 };
 
-export const editTask = async (task) => {
-  try {
+export const editTask = async task => {
     await api().put(`/Todo/${task.id}.json`, task);
-  } catch (error) {
-    return console.log(error);
-  }
 };
 
-export const removeTask = async (task) => {
-  try {
-    await api().delete(`/Todo/${task.id}.json`);
-  } catch (error) {
-    return console.log(error);
-  }
+export const removeTask = async task => {
+        await api().delete(`/Todo/${task.id}.json`);
 };
