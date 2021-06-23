@@ -1,18 +1,54 @@
 import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
 import { useClickOutside } from 'react-click-outside-hook'
+import { useDrag } from 'react-dnd';
 import { DONE, EDIT, ERROR, LOADING, REMOVE } from '../../store/TodoList/TodoList.actions';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
 import { editTask, removeTask } from '../../store/TodoList/TodoList.services';
 import './Task.scss';
+import { TaskType } from './TaskType';
 
-const Task = ({ task, task: { id, name, done } }) => {
+const Task = ({ task, task: { id, name, done }, onDropTaskTodo, onDropTaskDone }) => {
     const { dispatch, todoListState: { isLoading } } = useContext(TodoListContext);
+    const {TASK_TODO, TASK_DONE} = TaskType;
     const [editingTask, setEditingTask] = useState({
         isEditing: false,
         name: ''
     });
     const [taskRef, hasClickedOutside] = useClickOutside();
-    const inputEl = useRef();
+    const inputRef = useRef();
+
+    //DRAG AND DROP
+    const [{ isDragging: isDraggingTodo }, dragRefTodo] = useDrag({
+        type: TASK_TODO,
+        item: task ,
+
+        end: (item, monitor) => {
+            const dropResult = monitor.getDropResult();
+
+            if(item && dropResult) {
+                handleDone(true);
+            }
+        },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging()
+        })
+    });
+
+    const [{ isDragging: isDraggingDone }, dragRefDone] = useDrag({
+        type: TASK_DONE,
+        item: task ,
+
+        end: (item, monitor) => {
+            const dropResult = monitor.getDropResult();
+
+            if(item && dropResult) {
+                handleDone(false);
+            }
+        },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging()
+        })
+    });
 
     // DELETE BTN
     const handleDelete = async () => {
@@ -45,7 +81,7 @@ const Task = ({ task, task: { id, name, done } }) => {
     // EDITION BTN
     const handleEditionComponent = useCallback(async () => {
         if (editingTask.isEditing) {
-            inputEl.current.focus();
+            inputRef.current.focus();
             // SIMPLE VALIDATION
             if(editingTask.name.length < 2) return true;
             if(editingTask.name === name) {
@@ -76,7 +112,7 @@ const Task = ({ task, task: { id, name, done } }) => {
 
     //FOCUS ON EDITING INPUT
     useEffect(() => {
-        if (editingTask.isEditing) inputEl.current.focus();
+        if (editingTask.isEditing) inputRef.current.focus();
     },[editingTask.isEditing]);
 
     //HANDLE CLICK OUTSIDE
@@ -90,7 +126,7 @@ const Task = ({ task, task: { id, name, done } }) => {
         <>
             {
                 editingTask.isEditing
-                ? <input className="task__input" type="text" value={editingTask.name} onChange={handleNameChange} ref={inputEl}/>
+                ? <input className="task__input" type="text" value={editingTask.name} onChange={handleNameChange} ref={inputRef}/>
                 : <p className="task__title" onClick={handleEditionComponent}>{name}</p>
             }
             <div className="task__btn-box">
@@ -106,15 +142,16 @@ const Task = ({ task, task: { id, name, done } }) => {
             </div>
         </>
     );
+
     
     const taskToDo = (
-        <li ref={taskRef} className="task">
+        <li  style={isDraggingTodo ? {backgroundColor:'#430000'} : null} ref={dragRefTodo} className="task" >
             {taskToDoElements}
         </li>
     );
     
     const taskDone = (
-        <li className="task">
+        <li style={isDraggingDone ? {backgroundColor:'rgb(65 96 58)'} : null} ref={dragRefDone} className="task" >
             <p className="task__title task__title--done">{name}</p>
             <div className="task__btn-box">
                 <button
