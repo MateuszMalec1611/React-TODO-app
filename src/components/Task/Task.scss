@@ -1,11 +1,14 @@
 .task {
     padding: 10px 14px;
-    margin-top: 4px;
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #0004;
+    box-shadow: 4px 4px 4px black;
     width: 100%;
+    cursor: pointer;
+    z-index: 1;
 
     &__title {
         font-size: 16px;
@@ -33,6 +36,7 @@
             border: 1px solid white;
             font-weight: bold;
             font-size: 11px;
+            box-shadow: 4px 4px 5px black;
 
             &:nth-child(1) {
                 padding-left: 12px;

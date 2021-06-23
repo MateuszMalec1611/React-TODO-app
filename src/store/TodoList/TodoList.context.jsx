@@ -25,7 +25,7 @@ const toDoListReducer = (state, { type, payload }) => {
                 todoList: [...state.todoList, payload],
                 isLoading: false,
             };
-        case DONE:
+        case DONE:   
             const editedTasks = state.todoList.map(todo => {
                 if (todo.id === payload.id) todo.done = payload.value;
                 return todo;
