@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect } from 'react';
 import { fetchAllTasks } from './TodoList.services';
-import { ADD, DONE, EDIT, ERROR, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
+import { ADD, CHANGE_ORDER, DONE, EDIT, ERROR, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
 import { prepareData } from '../../utils/prepareData';
 
 export const TodoListContext = createContext();
@@ -25,6 +25,12 @@ const toDoListReducer = (state, { type, payload }) => {
                 todoList: [...state.todoList, payload],
                 isLoading: false,
             };
+        case CHANGE_ORDER:
+            return {
+                ...state,
+                todoList: payload,
+                isLoading: false,
+            }
         case DONE:   
             const editedTasks = state.todoList.map(todo => {
                 if (todo.id === payload.id) todo.done = payload.value;

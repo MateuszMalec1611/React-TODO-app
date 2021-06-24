@@ -9,6 +9,10 @@ export const addTask = async task => {
     await api().post(`/Todo.json`, task);
 };
 
+export const changeOrder = async tasks => {
+    await api().put(`/Todo.json`, tasks);
+};
+
 export const editTask = async task => {
     await api().put(`/Todo/${task.id}.json`, task);
 };
