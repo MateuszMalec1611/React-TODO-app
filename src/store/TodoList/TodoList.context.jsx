@@ -1,61 +1,75 @@
 import { createContext, useReducer, useEffect } from 'react';
-import { fetchAllTasks } from './TodoList.services';
-import { ADD, CHANGE_ORDER, DONE, EDIT, ERROR, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
+import { fetchAllTodoTasks, fetchAllDoneTasks } from './TodoList.services';
+import { ADD, CHANGE_ORDER_TODO, CHANGE_ORDER_DONE, DONE, EDIT, ERROR, SET_TODO_DATA, SET_DONE_DATA, REMOVE, LOADING } from './TodoList.actions';
 import { prepareData } from '../../utils/prepareData';
 
 export const TodoListContext = createContext();
 
 const initialState = {
-    todoList: [],
+    todoListTodo: [],
+    todoListDone: [],
     isLoading: false,
     error: undefined,
 };
 
 const toDoListReducer = (state, { type, payload }) => {
     switch (type) {
-        case SET_DATA:
+        case SET_TODO_DATA:
             return {
                 ...state,
-                todoList: payload ?? [],
+                todoListTodo: payload ?? [],
+                isLoading: false,
+            };
+
+        case SET_DONE_DATA:
+            return {
+                ...state,
+                todoListDone: payload ?? [],
                 isLoading: false,
             };
         case ADD:
             return {
                 ...state,
-                todoList: [...state.todoList, payload],
+                todoList: [...state.todoListTodo, payload],
                 isLoading: false,
             };
-        case CHANGE_ORDER:
+        case CHANGE_ORDER_TODO:
             return {
                 ...state,
-                todoList: payload,
+                todoListTodo: payload,
+                isLoading: false,
+            }
+
+        case CHANGE_ORDER_DONE:
+            return {
+                ...state,
+                todoListDone: payload,
                 isLoading: false,
             }
         case DONE:   
-            const editedTasks = state.todoList.map(todo => {
-                if (todo.id === payload.id) todo.done = payload.value;
-                return todo;
-            });
             return {
                 ...state,
-                todoList: editedTasks,
+                todoListTodo: payload.newTodoList,
+                todoListDone: payload.newDoneList,
                 isLoading: false,
             };
         case EDIT:
-            const newTodoList = state.todoList.map(todo => {
+            const newTodoListTodo = state.todoListTodo.map(todo => {
                 if (todo.id === payload.id) todo = payload;
                 return todo;
             });
             return {
                 ...state,
-                todoList: newTodoList,
+                todoListTodo: newTodoListTodo,
                 isLoading: false,
             };
         case REMOVE:
-            const newTasksList = state.todoList.filter(todo => todo.id !== payload.id);
+            const newTasksListTodo = payload.value ? state.todoListTodo.filter(todo => todo.id !== payload.id) : state.todoListTodo;
+            const newTasksListDone = !payload.value ? state.todoListDone.filter(todo => todo.id !== payload.id) : state.todoListDone;
             return {
                 ...state,
-                todoList: newTasksList,
+                todoListTodo: newTasksListTodo,
+                todoListDone: newTasksListDone,
                 isLoading: false,
             };
         case LOADING:
@@ -78,19 +92,29 @@ const toDoListReducer = (state, { type, payload }) => {
 const TodoAppProvider = ({ children }) => {
     const [todoListState, dispatch] = useReducer(toDoListReducer, initialState);
 
-    const setTasks = async () => {
+    const setTodoTasks = async () => {
         dispatch({ type: LOADING, payload: true });
         try {
-            const tasks = await fetchAllTasks();
+            const tasks = await fetchAllTodoTasks();
+            dispatch({ type: SET_TODO_DATA, payload: prepareData(tasks) });
+        } catch (err) {
+            dispatch({ type: ERROR, payload: err });
+        }
+    };
 
-            dispatch({ type: SET_DATA, payload: prepareData(tasks) });
+    const setDoneTasks = async () => {
+        dispatch({ type: LOADING, payload: true });
+        try {
+            const tasks = await fetchAllDoneTasks();
+            dispatch({ type: SET_DONE_DATA, payload: prepareData(tasks) });
         } catch (err) {
             dispatch({ type: ERROR, payload: err });
         }
     };
 
     useEffect(() => {
-        setTasks();
+        setTodoTasks();
+        setDoneTasks();
     }, []);
 
     return (
@@ -98,7 +122,7 @@ const TodoAppProvider = ({ children }) => {
             value={{
                 dispatch,
                 todoListState,
-                setTasks,
+                setTodoTasks,
             }}>
             {children}
         </TodoListContext.Provider>

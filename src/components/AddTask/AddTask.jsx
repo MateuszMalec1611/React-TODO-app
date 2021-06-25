@@ -5,8 +5,8 @@ import { ADD, ERROR, LOADING } from '../../store/TodoList/TodoList.actions';
 import './AddTask.scss';
 
 const AddTask = () => {
-    const { dispatch, setTasks, todoListState: { isLoading } } = useContext(TodoListContext);
-
+    const { dispatch, setTodoTasks, todoListState: { isLoading } } = useContext(TodoListContext);
+    
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);
 
@@ -22,13 +22,14 @@ const AddTask = () => {
         const newTask = {
             name: taskValue,
             done: false,
+            type: 'todo',
             id: null,
         };
         
         try {
             await addTask(newTask);
             dispatch({ type: ADD, payload: newTask });
-            setTasks();
+            setTodoTasks();
         } catch (err) {
             dispatch({type: ERROR, payload: err});
         }

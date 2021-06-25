@@ -1,6 +1,8 @@
 export const ADD = 'ADD';
-export const SET_DATA = 'DATA';
-export const CHANGE_ORDER = 'CHANGE_ORDER';
+export const SET_TODO_DATA = 'DATA_TODO';
+export const SET_DONE_DATA = 'DATA_DONE';
+export const CHANGE_ORDER_TODO = 'CHANGE_ORDER_TODO';
+export const CHANGE_ORDER_DONE = 'CHANGE_ORDER_DONE';
 export const DONE = 'DONE';
 export const EDIT = 'EDIT';
 export const ERROR = 'ERROR';
