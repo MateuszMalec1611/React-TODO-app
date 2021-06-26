@@ -28,16 +28,16 @@ const TasksList = () => {
             destination.index === source.index
         ) return;
         
+        dispatch({ type: LOADING, payload: true });
         const start = source.droppableId;
         const finish = destination.droppableId;
 
         if (start === finish) {
             if (source.droppableId === TODO_LIST) {
-                dispatch({ type: LOADING, payload: true });
-
                 const newTasksOrderTodo = [...todoListTodo];
                 const task = newTasksOrderTodo.splice(source.index, 1);
                 newTasksOrderTodo.splice(destination.index, 0, ...task);
+
                 newTasksOrderTodo.forEach((item, order) => item.order = order);
                
                 try {
@@ -47,11 +47,10 @@ const TasksList = () => {
                     dispatch({ type: ERROR, payload: err + 'order' });
                 }
             } else {
-                dispatch({ type: LOADING, payload: true });
-
                 const newTasksOrderDone = [...todoListDone];
                 const task = newTasksOrderDone.splice(source.index, 1);
                 newTasksOrderDone.splice(destination.index, 0, ...task);
+
                 newTasksOrderDone.forEach((item, order) => item.order = order);
 
                 try {
@@ -61,15 +60,18 @@ const TasksList = () => {
                     dispatch({ type: ERROR, payload: err });
                 }
             }
-        } else if (start === TODO_LIST && finish === DONE_LIST) {
-            dispatch({ type: LOADING, payload: true });
-
+        } else if (start !== finish) {
             const newTasksOrderTodo = [...todoListTodo];
             const newTasksOrderDone = [...todoListDone];
-            const task = newTasksOrderTodo.splice(source.index, 1);
-            task[0].done = !task[0].done;
+            let task = [];
 
-            newTasksOrderDone.splice(destination.index, 0, ...task);
+            if(start === TODO_LIST && finish === DONE_LIST) task = newTasksOrderTodo.splice(source.index, 1);
+            if(start === DONE_LIST && finish === TODO_LIST) task = newTasksOrderDone.splice(source.index, 1);
+            task[0].done = !task[0].done;
+            
+            if(start === TODO_LIST && finish === DONE_LIST) newTasksOrderDone.splice(destination.index, 0, ...task);
+            if(start === DONE_LIST && finish === TODO_LIST) newTasksOrderTodo.splice(destination.index, 0, ...task);
+            
             newTasksOrderDone.forEach((item, order) => item.order = order);
             newTasksOrderTodo.forEach((item, order) => item.order = order);
 
@@ -80,28 +82,7 @@ const TasksList = () => {
             } catch (err) {
                 dispatch({ type: ERROR, payload: err });
             }
-
-        } else if (start === DONE_LIST && finish === TODO_LIST) {
-            dispatch({ type: LOADING, payload: true });
-
-            const newTasksOrderDone = [...todoListDone];
-            const newTasksOrderTodo = [...todoListTodo];
-            const task = newTasksOrderDone.splice(source.index, 1);
-            task[0].done = !task[0].done;
-
-            newTasksOrderTodo.splice(destination.index, 0, ...task);
-            newTasksOrderDone.forEach((item, order) => item.order = order);
-            newTasksOrderTodo.forEach((item, order) => item.order = order);
-
-            try {
-                await newTasksOrderTodo.forEach(task => changeOrder(task, true, 'order'));
-                await newTasksOrderDone.forEach(task => changeOrder(task, false, 'order'));
-                dispatch({ type: CHANGE_LIST_ORDER, payload: { newTasksOrderDone, newTasksOrderTodo } });
-            } catch (err) {
-                dispatch({ type: ERROR, payload: err });
-            }
-
-        }
+        } 
     };
 
     //CREATE TASKS COMPONENTS
