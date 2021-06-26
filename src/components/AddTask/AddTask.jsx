@@ -6,7 +6,7 @@ import './AddTask.scss';
 
 const AddTask = () => {
     const { dispatch, setTasks, todoListState: { isLoading } } = useContext(TodoListContext);
-
+    
     const [taskValue, setTaskValue] = useState('');
     const [taskError, setTaskError] = useState(false);
 
@@ -23,6 +23,7 @@ const AddTask = () => {
             name: taskValue,
             done: false,
             id: null,
+            order: null,
         };
         
         try {

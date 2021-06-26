@@ -2,6 +2,33 @@
     position: relative;
     margin: 20px 0;
 
+    &-done, &-todo {
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            z-index: 0;
+        }
+    }
+
+    &-todo {
+        &::before {
+            top: 0;
+            bottom: -50px;
+        }
+    }
+
+    &-done {
+        margin-bottom: 90px;
+        &::before {
+            top: -10px;
+            bottom: -50px;
+        }
+    }
+
     &__header,
     &__header--done {
         margin: 20px 0;
@@ -14,23 +41,10 @@
     }
 
     &__info {
-        position: relative;
         color: tomato;
-
-        &::before {
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            padding: 100px;
-            position: absolute;
-            content: '';
-            z-index: 0;
-        }
     }
 
     &__ul {
-        padding-bottom: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;

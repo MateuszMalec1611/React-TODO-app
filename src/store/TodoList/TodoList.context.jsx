@@ -1,12 +1,13 @@
 import { createContext, useReducer, useEffect } from 'react';
-import { fetchAllTasks } from './TodoList.services';
-import { ADD, DONE, EDIT, ERROR, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
+import { fetchAllTasks  } from './TodoList.services';
+import { ADD, CHANGE_LIST_ORDER, DONE, EDIT, ERROR, SET_DATA, REMOVE, LOADING } from './TodoList.actions';
 import { prepareData } from '../../utils/prepareData';
 
 export const TodoListContext = createContext();
 
 const initialState = {
-    todoList: [],
+    todoListTodo: [],
+    todoListDone: [],
     isLoading: false,
     error: undefined,
 };
@@ -14,42 +15,51 @@ const initialState = {
 const toDoListReducer = (state, { type, payload }) => {
     switch (type) {
         case SET_DATA:
+            payload.todo && payload.todo.sort((a, b) => a.order - b.order);
+            payload.done && payload.done.sort((a, b) => a.order - b.order);
             return {
                 ...state,
-                todoList: payload ?? [],
+                todoListTodo: payload.todo ?? [],
+                todoListDone: payload.done ?? [],
                 isLoading: false,
             };
         case ADD:
             return {
                 ...state,
-                todoList: [...state.todoList, payload],
+                todoList: [...state.todoListTodo, payload],
                 isLoading: false,
             };
-        case DONE:   
-            const editedTasks = state.todoList.map(todo => {
-                if (todo.id === payload.id) todo.done = payload.value;
-                return todo;
-            });
+        case CHANGE_LIST_ORDER:
             return {
                 ...state,
-                todoList: editedTasks,
+                todoListTodo: payload.newTasksOrderTodo,
+                todoListDone: payload.newTasksOrderDone,
+                isLoading: false,
+            }
+        case DONE:   
+            return {
+                ...state,
+                todoListTodo: payload.newTodoList,
+                todoListDone: payload.newDoneList,
                 isLoading: false,
             };
         case EDIT:
-            const newTodoList = state.todoList.map(todo => {
+            const newTodoListTodo = state.todoListTodo.map(todo => {
                 if (todo.id === payload.id) todo = payload;
                 return todo;
             });
             return {
                 ...state,
-                todoList: newTodoList,
+                todoListTodo: newTodoListTodo,
                 isLoading: false,
             };
         case REMOVE:
-            const newTasksList = state.todoList.filter(todo => todo.id !== payload.id);
+            const newTasksListTodo = payload.value ? state.todoListTodo.filter(todo => todo.id !== payload.id) : state.todoListTodo;
+            const newTasksListDone = !payload.value ? state.todoListDone.filter(todo => todo.id !== payload.id) : state.todoListDone;
             return {
                 ...state,
-                todoList: newTasksList,
+                todoListTodo: newTasksListTodo,
+                todoListDone: newTasksListDone,
                 isLoading: false,
             };
         case LOADING:
@@ -76,8 +86,7 @@ const TodoAppProvider = ({ children }) => {
         dispatch({ type: LOADING, payload: true });
         try {
             const tasks = await fetchAllTasks();
-
-            dispatch({ type: SET_DATA, payload: prepareData(tasks) });
+            dispatch({ type: SET_DATA, payload: {todo: prepareData(tasks.todo), done: prepareData(tasks.done)} });
         } catch (err) {
             dispatch({ type: ERROR, payload: err });
         }
