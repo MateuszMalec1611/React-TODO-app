@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
+import composeRefs from '@seznam/compose-react-refs'
 import { Draggable } from 'react-beautiful-dnd';
-// import { useClickOutside } from 'react-click-outside-hook';
+import { useClickOutside } from 'react-click-outside-hook';
 import { DONE, EDIT, ERROR, LOADING, REMOVE } from '../../store/TodoList/TodoList.actions';
 import { editTask, removeTask, setDoneOrTodo  } from '../../store/TodoList/TodoList.services';
 import { TodoListContext } from '../../store/TodoList/TodoList.context';
@@ -11,12 +12,11 @@ const Task = ({ task, index, task: { id, name, done } }) => {
         dispatch,
         todoListState: { isLoading, todoListTodo, todoListDone },
     } = useContext(TodoListContext);
-    // const {TASK_TODO, TASK_DONE} = TaskType;
     const [editingTask, setEditingTask] = useState({
         isEditing: false,
         name: '',
     });
-    // const [taskRef, hasClickedOutside] = useClickOutside();
+    const [taskRef, hasClickedOutside] = useClickOutside();
     const inputRef = useRef();
 
     // DELETE BTN
@@ -99,9 +99,9 @@ const Task = ({ task, index, task: { id, name, done } }) => {
     }, [editingTask.isEditing]);
 
     //HANDLE CLICK OUTSIDE
-    // useEffect(() => {
-    //     if (hasClickedOutside && editingTask.isEditing) handleEditionComponent();
-    // }, [editingTask.isEditing, handleEditionComponent, hasClickedOutside]);
+    useEffect(() => {
+        if (hasClickedOutside && editingTask.isEditing) handleEditionComponent();
+    }, [editingTask.isEditing, handleEditionComponent, hasClickedOutside]);
 
     // RENDER COMPONENTS
     const taskToDoElements = (
@@ -145,7 +145,7 @@ const Task = ({ task, index, task: { id, name, done } }) => {
                 <li
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    ref={provided.innerRef}
+                    ref={composeRefs(provided.innerRef, taskRef)}
                     className="task">
                     {taskToDoElements}
                 </li>
